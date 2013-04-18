@@ -149,34 +149,34 @@ NSString * const RPSTOnePasswordOpenWebURLHTTPS = @"ophttps://";
 
 + (NSURL *)rpst_passwordManagementAppCompleteURLForOpenWebViewWithScheme:(NSString *)scheme
 															   urlString:(NSString *)urlString {
-	NSURL *fullURL = nil;
+    NSURL *fullURL = nil;
     UIApplication *app = [UIApplication sharedApplication];
 	
-	if ([app canOpenURL:[NSURL URLWithString:scheme]]) {
+    if ([app canOpenURL:[NSURL URLWithString:scheme]]) {
 		
-		NSString *correctedURLString = nil;
-		NSRange rangeOfSchemeSeparator;
+        NSString *correctedURLString = nil;
+        NSRange rangeOfSchemeSeparator;
 		
-		rangeOfSchemeSeparator = [urlString rangeOfString:@"://"];
+        rangeOfSchemeSeparator = [urlString rangeOfString:@"://"];
 		
-		if (rangeOfSchemeSeparator.location != NSNotFound) {
-			// Remove the scheme and the :// from the string
-			NSArray *components = [urlString componentsSeparatedByString:@"://"];
-			if (components.count == 2) {
-				correctedURLString = [components objectAtIndex:1];
-			} else {
-				NSLog(@"RPSTPasswordManagementAppService: invalid URL string argument. Contains multiple :// separators.");
-			}
-		} else {
-			correctedURLString = urlString;
-		}
+        if (rangeOfSchemeSeparator.location != NSNotFound) {
+            // Remove the scheme and the :// from the string
+            NSArray *components = [urlString componentsSeparatedByString:@"://"];
+            if (components.count == 2) {
+                correctedURLString = [components objectAtIndex:1];
+            } else {
+                NSLog(@"RPSTPasswordManagementAppService: invalid URL string argument. Contains multiple :// separators.");
+            }
+        } else {
+            correctedURLString = urlString;
+        }
 		
-		if (correctedURLString.length > 0) {
-			NSString *finalURLString = [NSString stringWithFormat:@"%@%@", scheme, correctedURLString];
-			fullURL = [NSURL URLWithString:finalURLString];
-		}
+        if (correctedURLString.length > 0) {
+            NSString *finalURLString = [NSString stringWithFormat:@"%@%@", scheme, correctedURLString];
+            fullURL = [NSURL URLWithString:finalURLString];
+        }
     }
-	return fullURL;
+    return fullURL;
 }
 
 @end

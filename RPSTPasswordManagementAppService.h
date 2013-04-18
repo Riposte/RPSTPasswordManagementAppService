@@ -27,7 +27,7 @@ typedef enum {
     RPSTPasswordManagementAppTypeNone,
     RPSTPasswordManagementAppType1Password_v3,
     RPSTPasswordManagementAppType1Password_v4,
-	RPSTPasswordManagementAppType1Password_v4_1,
+    RPSTPasswordManagementAppType1Password_v4_1,
 } RPSTPasswordManagementAppType;
 
 @interface RPSTPasswordManagementAppService : NSObject
