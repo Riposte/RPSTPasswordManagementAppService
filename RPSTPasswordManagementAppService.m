@@ -1,5 +1,5 @@
 //
-//  RPPasswordManagementAppService.m
+//  RPPasswordManagementAppService.h
 //  Riposte
 //
 //  Copyright (c) 2013 Riposte LLC. All rights reserved.
@@ -17,26 +17,35 @@
 
 #import "RPSTPasswordManagementAppService.h"
 
-#define kOnePasswordURL_v3 @"onepassword3://"
-#define kOnePasswordURL_v4 @"onepassword4://"
-#define kOnePasswordURL_v4_1 @"onepassword://"
-#define kOnePasswordURL_v4_1b @"onepasswordb://"
-
 @implementation RPSTPasswordManagementAppService
+
+#pragma mark - Constants
+
+// Search Schemes
+NSString * const RPSTOnePasswordSearch_v3 = @"onepassword3://";
+NSString * const RPSTOnePasswordSearch_v4 = @"onepassword4://";
+NSString * const RPSTOnePasswordSearch_v4_1 = @"onepassword://";
+NSString * const RPSTOnePasswordSearch_v4_1b = @"onepasswordb://";
+
+// Web View Schemes
+NSString * const RPSTOnePasswordOpenWebURLHTTP = @"ophttp://";
+NSString * const RPSTOnePasswordOpenWebURLHTTPS = @"ophttps://";
+
+#pragma mark - Checking Availability
 
 + (BOOL)passwordManagementAppIsAvailable {
     BOOL canOpen = NO;
     UIApplication *app = [UIApplication sharedApplication];
-    if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1b]]) {
+    if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1b]]) {
         canOpen = YES;
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1]]) {
         canOpen = YES;
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4]]) {
         canOpen = YES;
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v3]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v3]]) {
         canOpen = YES;
     }
     return canOpen;
@@ -45,16 +54,16 @@
 + (RPSTPasswordManagementAppType)availablePasswordManagementApp {
     RPSTPasswordManagementAppType pwApp = NO;
     UIApplication *app = [UIApplication sharedApplication];
-    if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1b]]) {
+    if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1b]]) {
+        pwApp = RPSTPasswordManagementAppType1Password_v4_1;
+    }
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1]]) {
+        pwApp = RPSTPasswordManagementAppType1Password_v4_1;
+    }
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4]]) {
         pwApp = RPSTPasswordManagementAppType1Password_v4;
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1]]) {
-        pwApp = RPSTPasswordManagementAppType1Password_v4;
-    }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4]]) {
-        pwApp = RPSTPasswordManagementAppType1Password_v4;
-    }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v3]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v3]]) {
         pwApp = RPSTPasswordManagementAppType1Password_v3;
     }
     return pwApp;
@@ -63,48 +72,124 @@
 + (NSString *)availablePasswordManagementAppDisplayName {
     NSString *name = nil;
     UIApplication *app = [UIApplication sharedApplication];
-    if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1b]]) {
+    if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1b]]) {
         name = @"1Password";
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1]]) {
         name = @"1Password";
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4]]) {
         name = @"1Password";
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v3]]) {
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v3]]) {
         name = @"1Password";
     }
     return name;
 }
 
+#pragma mark - Searching Entries
+
 + (NSURL *)passwordManagementAppCompleteURLForSearchQuery:(NSString *)query {
     NSURL *fullURL = nil;
     UIApplication *app = [UIApplication sharedApplication];
-    if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1b]]) {
-        NSString *baseURL = kOnePasswordURL_v4_1b;
+    if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1b]]) {
+        NSString *baseURL = RPSTOnePasswordSearch_v4_1b;
         NSString *fullURLString = [NSString stringWithFormat:@"%@search/%@", baseURL, query];
         fullURL = [NSURL URLWithString:fullURLString];
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4_1]]) {
-        NSString *baseURL = kOnePasswordURL_v4_1;
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4_1]]) {
+        NSString *baseURL = RPSTOnePasswordSearch_v4_1;
         NSString *fullURLString = [NSString stringWithFormat:@"%@search/%@", baseURL, query];
         fullURL = [NSURL URLWithString:fullURLString];
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v4]]) {
-        NSString *baseURL = kOnePasswordURL_v4;
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v4]]) {
+        NSString *baseURL = RPSTOnePasswordSearch_v4;
         NSString *fullURLString = [NSString stringWithFormat:@"%@search/%@", baseURL, query];
         fullURL = [NSURL URLWithString:fullURLString];
     }
-    else if ([app canOpenURL:[NSURL URLWithString:kOnePasswordURL_v3]]) {
-        NSString *baseURL = kOnePasswordURL_v3;
+    else if ([app canOpenURL:[NSURL URLWithString:RPSTOnePasswordSearch_v3]]) {
+        NSString *baseURL = RPSTOnePasswordSearch_v3;
         NSString *fullURLString = [NSString stringWithFormat:@"%@%@", baseURL, query];
         fullURL = [NSURL URLWithString:fullURLString];
     }
     return fullURL;
 }
 
+#pragma mark - Open Web Views
+
++ (BOOL)passwordManagementAppSupportsOpenWebView {
+	RPSTPasswordManagementAppType availableAppType = [RPSTPasswordManagementAppService availablePasswordManagementApp];
+	BOOL supportsWebViews;
+	switch (availableAppType) {
+		case RPSTPasswordManagementAppType1Password_v4_1: {
+			supportsWebViews = YES;
+		} break;
+		case RPSTPasswordManagementAppType1Password_v4:
+		case RPSTPasswordManagementAppType1Password_v3: {
+			supportsWebViews = NO;
+		}
+		default: {
+			supportsWebViews = NO;
+		} break;
+	}
+	return supportsWebViews;
+}
+
++ (NSURL *)passwordManagementAppCompleteURLForOpenWebViewHTTP:(NSString *)urlString {
+	return [RPSTPasswordManagementAppService
+			rpst_passwordManagementAppCompleteURLForOpenWebViewWithScheme:RPSTOnePasswordOpenWebURLHTTP
+			urlString:urlString];
+}
+
++ (NSURL *)passwordManagementAppCompleteURLForOpenWebViewHTTPS:(NSString *)urlString {
+	return [RPSTPasswordManagementAppService
+			rpst_passwordManagementAppCompleteURLForOpenWebViewWithScheme:RPSTOnePasswordOpenWebURLHTTPS
+			urlString:urlString];
+}
+
++ (NSURL *)rpst_passwordManagementAppCompleteURLForOpenWebViewWithScheme:(NSString *)scheme
+															   urlString:(NSString *)urlString {
+	NSURL *fullURL = nil;
+    UIApplication *app = [UIApplication sharedApplication];
+	
+	if ([app canOpenURL:[NSURL URLWithString:scheme]]) {
+		
+		NSString *correctedURLString = nil;
+		NSRange rangeOfSchemeSeparator;
+		
+		rangeOfSchemeSeparator = [urlString rangeOfString:@"://"];
+		
+		if (rangeOfSchemeSeparator.location != NSNotFound) {
+			// Remove the scheme and the :// from the string
+			NSArray *components = [urlString componentsSeparatedByString:@"://"];
+			if (components.count == 2) {
+				correctedURLString = [components objectAtIndex:1];
+			} else {
+				NSLog(@"RPSTPasswordManagementAppService: invalid URL string argument. Contains multiple :// separators.");
+			}
+		} else {
+			correctedURLString = urlString;
+		}
+		
+		if (correctedURLString.length > 0) {
+			NSString *finalURLString = [NSString stringWithFormat:@"%@%@", scheme, correctedURLString];
+			fullURL = [NSURL URLWithString:finalURLString];
+		}
+    }
+	return fullURL;
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
 
 
 

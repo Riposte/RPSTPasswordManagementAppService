@@ -17,17 +17,32 @@
 
 #import <Foundation/Foundation.h>
 
+// RPSTPasswordManagementAppType implies functionality that is available since
+// a given version was released, and not necessarily that a given version
+// number has been installed. There are significant differences between
+// version 1Password 4.0 and 4.1, for example. Not every dot release will be included
+// here; only significant releases that affect URL schemes.
+
 typedef enum {
     RPSTPasswordManagementAppTypeNone,
     RPSTPasswordManagementAppType1Password_v3,
-    RPSTPasswordManagementAppType1Password_v4
+    RPSTPasswordManagementAppType1Password_v4,
+	RPSTPasswordManagementAppType1Password_v4_1,
 } RPSTPasswordManagementAppType;
 
 @interface RPSTPasswordManagementAppService : NSObject
 
+// Checking Availability
 + (BOOL)passwordManagementAppIsAvailable;
 + (NSString *)availablePasswordManagementAppDisplayName;
 + (RPSTPasswordManagementAppType)availablePasswordManagementApp;
+
+// Searching for Entries
 + (NSURL *)passwordManagementAppCompleteURLForSearchQuery:(NSString *)query;
+
+// Open in Web View
++ (BOOL)passwordManagementAppSupportsOpenWebView;
++ (NSURL *)passwordManagementAppCompleteURLForOpenWebViewHTTP:(NSString *)urlString;
++ (NSURL *)passwordManagementAppCompleteURLForOpenWebViewHTTPS:(NSString *)urlString;
 
 @end
