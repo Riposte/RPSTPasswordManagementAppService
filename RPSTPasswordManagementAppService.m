@@ -127,7 +127,7 @@ NSString * const RPSTOnePasswordOpenWebURLHTTPS = @"ophttps://";
 		case RPSTPasswordManagementAppType1Password_v4:
 		case RPSTPasswordManagementAppType1Password_v3: {
 			supportsWebViews = NO;
-		}
+		} break;
 		default: {
 			supportsWebViews = NO;
 		} break;
